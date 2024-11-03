@@ -15,14 +15,12 @@ func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		command := scanner.Text()
-		// fmt.Println(command, data_a, data_b)
 		Execute(&data_a, &data_b, command)
-		// fmt.Println(mylib.IsSorted(data_a), command)
 	}
 
 	// fmt.Println(data_a, data_b)
-	if !mylib.IsSorted(data_a) && len(data_b) == 0 {
-		fmt.Println("KO", data_a, data_b)
+	if !mylib.IsSorted(data_a) || len(data_b) != 0 {
+		fmt.Println("KO")
 		return
 	}
 	fmt.Println("OK")
