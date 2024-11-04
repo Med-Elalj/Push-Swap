@@ -8,24 +8,13 @@ import (
 // Push transfers the last element of the `from` slice to the end of the `to` slice.
 // It modifies both slices in place. If `from` is empty, it prints an error and exits.
 func Push(to, from *[]int) {
-	*to = append([]int{(*from)[0]}, *to...)
-	if len(*from) != 0 {
-		*from = (*from)[1:]
-	} else {
-		fmt.Println("Error")
+	if len(*from) == 0 {
+		fmt.Println("Error empty from slice")
 		os.Exit(1)
 	}
+	*to = append([]int{(*from)[0]}, (*to)...)
+	*from = (*from)[1:]
 }
-
-// func Push_b(to, from *[]int) {
-// 	*to = append(*to, (*from)[len(*from)-1])
-// 	if len(*from) != 0 {
-// 		*from = (*from)[:len(*from)-1]
-// 	} else {
-// 		fmt.Println("Error")
-// 		os.Exit(1)
-// 	}
-// }
 
 // SendTo transfers the element at index i to index j keeping the order of the rest.
 // If indices are out of bounds or data is nil, it prints an error and exits.
