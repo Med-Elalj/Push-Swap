@@ -29,54 +29,95 @@ func main() {
 }
 
 func sortStacks(stackA *[]int, stackB *[]int, instructions *[]string) {
-	for !mylib.IsSorted(*stackA, true) || len(*stackB) > 0 {
-		if !mylib.IsSorted(*stackA, true) {
-			sort(stackA, stackB, instructions, true)
+	for len(*stackA) > 3 && !mylib.IsSorted(*stackA, true) {
+		smallestIdx := indxOfSmallest(stackA)
+		if smallestIdx == 0 {
+			mylib.Execute(stackA, stackB, "pb")
+			*instructions = append(*instructions, "pb")
+		} else if smallestIdx > len(*stackA)/2 {
+			for i := smallestIdx; i < len(*stackA); i++ {
+				mylib.Execute(stackA, stackB, "rra")
+				*instructions = append(*instructions, "rra")
+			}
+			mylib.Execute(stackA, stackB, "pb")
+			*instructions = append(*instructions, "pb")
+		} else {
+			for i := smallestIdx; i > 0; i-- {
+				mylib.Execute(stackA, stackB, "ra")
+				*instructions = append(*instructions, "ra")
+			}
+			mylib.Execute(stackA, stackB, "pb")
+			*instructions = append(*instructions, "pb")
 		}
-		if !mylib.IsSorted(*stackB, false) {
-			sort(stackA, stackB, instructions, false)
-		}
-		if len(*stackB) > 0 && mylib.IsSorted(*stackB, false) && mylib.IsSorted(*stackA, true) {
-			*instructions = append(*instructions, "pa")
-			mylib.Execute(stackA, stackB, "pa")
-		}
+	}
+	sortThree(stackA, instructions)
+	for len(*stackB) > 0 {
+		mylib.Execute(stackA, stackB, "pa")
+		*instructions = append(*instructions, "pa")
 	}
 }
 
-func sort(stackA, stackB *[]int, instructions *[]string, order bool) {
-	var sa, ra bool
-	var t, nt string
-
-	if order {
-		if len(*stackA) < 2 {
-			return
-		}
-		sa = (*stackA)[0] > (*stackA)[1]
-		ra = (*stackA)[0] > (*stackA)[len(*stackA)-1]
-		t = "a"
-		nt = "b"
-	} else {
-		if len(*stackB) < 2 {
-			return
-		}
-		sa = (*stackB)[0] < (*stackB)[1]
-		ra = (*stackB)[0] < (*stackB)[len(*stackB)-1]
-		t = "b"
-		nt = "a"
-	}
-
+func sortThree(stack *[]int, instructions *[]string) {
+	first := (*stack)[0] < (*stack)[1]
+	second := (*stack)[1] < (*stack)[2]
+	last := (*stack)[2] > (*stack)[0]
 	switch {
-	case sa && !ra:
-		*instructions = append(*instructions, "s"+t)
-		mylib.Execute(stackA, stackB, "s"+t)
-	case !sa && !ra:
-		*instructions = append(*instructions, "p"+nt)
-		mylib.Execute(stackA, stackB, "p"+nt)
-	case sa && ra:
-		*instructions = append(*instructions, "r"+t)
-		mylib.Execute(stackA, stackB, "r"+t)
-	case !sa && ra:
-		mylib.Execute(stackA, stackB, "rr"+t)
-		*instructions = append(*instructions, "rr"+t)
+	case first && second:
+		// 1 2 3
+		return
+	case first && !second && last:
+		// 2 1 3
+		mylib.Execute(stack, nil, "sa")
+		*instructions = append(*instructions, "sa")
+		mylib.Execute(stack, nil, "ra")
+		*instructions = append(*instructions, "ra")
+	case first && !second && !last:
+		// 2 3 1
+		mylib.Execute(stack, nil, "rra")
+		*instructions = append(*instructions, "rra")
+	case !first && !second && !last:
+		// 3 2 1
+		mylib.Execute(stack, nil, "sa")
+		*instructions = append(*instructions, "sa")
+		mylib.Execute(stack, nil, "rra")
+		*instructions = append(*instructions, "rra")
+	case !first && !second && last:
+		// 2 3 1
+		mylib.Execute(stack, nil, "ra")
+		*instructions = append(*instructions, "ra")
+	case !first && second && !last:
+		// 3 1 2
+		mylib.Execute(stack, nil, "ra")
+		*instructions = append(*instructions, "ra")
+	case !first && second && last:
+		// 2 1 3
+		mylib.Execute(stack, nil, "sa")
+		*instructions = append(*instructions, "sa")
 	}
+	// fmt.Println(stack)
 }
+
+// 123
+// 213
+// 312
+// 321
+// 231
+// 132
+func indxOfSmallest(stack *[]int) int {
+	smallest := (*stack)[0]
+	smallestIdx := 0
+	for i, val := range *stack {
+		if val < smallest {
+			smallest = val
+			smallestIdx = i
+		}
+	}
+	return smallestIdx
+}
+
+// arg="2 3 4 1" ;go run . ${arg} | go run ../checker/main.go ${arg}
+// arg="2 1 3" ;go run . ${arg} | go run ../checker/main.go ${arg}
+// arg="3 1 2" ;go run . ${arg} | go run ../checker/main.go ${arg}
+// arg="3 2 1" ;go run . ${arg} | go run ../checker/main.go ${arg}
+// arg="2 3 1" ;go run . ${arg} | go run ../checker/main.go ${arg}
+// arg="1 3 2" ;go run . ${arg} | go run ../checker/main.go ${arg}
