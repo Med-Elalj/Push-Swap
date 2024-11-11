@@ -63,6 +63,8 @@ func hasDuplicate(data []int) bool {
 	return false
 }
 
+// Execute performs a series of operations on two integer slices (data_a, data_b) based on the given command.
+// The function supports commands that manipulate stacks, such as pushing and rotating elements.
 func Execute(data_a, data_b *[]int, command string) {
 	switch command {
 	case "sa":
@@ -94,4 +96,17 @@ func Execute(data_a, data_b *[]int, command string) {
 		fmt.Println("Error command not found", command)
 		os.Exit(2)
 	}
+}
+
+// MinElementIndex returns the index of the smallest element
+func MinElementIndex(stack *[]int) int {
+	smallest := (*stack)[0]
+	smallestIdx := 0
+	for i, val := range *stack {
+		if val < smallest {
+			smallest = val
+			smallestIdx = i
+		}
+	}
+	return smallestIdx
 }

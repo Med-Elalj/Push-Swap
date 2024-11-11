@@ -16,7 +16,9 @@ func main() {
 	for scanner.Scan() {
 		command := scanner.Text()
 		// fmt.Println(command, data_a, data_b)
-		mylib.Execute(&data_a, &data_b, command)
+		if command != "" {
+			mylib.Execute(&data_a, &data_b, command)
+		}
 	}
 
 	// fmt.Println(data_a, data_b)
@@ -32,7 +34,9 @@ func init() {
 		return
 	}
 	if len(os.Args) < 2 {
-		fmt.Println("Usage: ./checker <name>", len(os.Args))
+		if mylib.PrintUsage {
+			fmt.Println("Usage: ./checker <name>", len(os.Args))
+		}
 		os.Exit(0)
 	}
 }

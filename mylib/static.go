@@ -28,3 +28,5 @@ func SendTo(data *[]int, i, j int) {
 	x := append([]int{v}, (*data)[j:]...)
 	*data = append((*data)[:j], x...)
 }
+
+var PrintUsage = false
