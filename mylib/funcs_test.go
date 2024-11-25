@@ -21,7 +21,7 @@ func TestIsSorted(t *testing.T) {
 		t.Error("Expected true, got false")
 	}
 	data = []int{5, 3, 4, 2, 1}
-	if !mylib.IsSorted(data, false) {
+	if mylib.IsSorted(data, false) {
 		t.Error("Expected false, got true")
 	}
 }
