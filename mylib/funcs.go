@@ -15,7 +15,7 @@ func IsSorted(data []int, ascending bool) bool {
 	}
 	var last int = data[0]
 	for _, v := range data {
-		if last > v && ascending {
+		if last > v == ascending {
 			return false
 		}
 		last = v
