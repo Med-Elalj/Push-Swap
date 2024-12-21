@@ -29,6 +29,17 @@ func main() {
 }
 
 func sortStacks(stackA *[]int, stackB *[]int, instructions *[]string) {
+	switch len(*stackA) {
+	case 1:
+		return
+	case 2:
+		if (*stackA)[0] > (*stackA)[1] {
+			mylib.Execute(stackA, nil, "sa")
+			*instructions = append(*instructions, "sa")
+		}
+		return
+
+	}
 	for len(*stackA) > 3 && !mylib.IsSorted(*stackA, true) {
 		smallestIdx := indxOfSmallest(stackA)
 		if smallestIdx == 0 {
@@ -50,6 +61,7 @@ func sortStacks(stackA *[]int, stackB *[]int, instructions *[]string) {
 			*instructions = append(*instructions, "pb")
 		}
 	}
+
 	sortThree(stackA, instructions)
 	for len(*stackB) > 0 {
 		mylib.Execute(stackA, stackB, "pa")
